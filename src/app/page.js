@@ -5,7 +5,7 @@ function FileUploadForm() {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
       setError("No file selected");
@@ -16,9 +16,16 @@ function FileUploadForm() {
       setError("Invalid file type. Please upload a .rb file.");
       return;
     }
-    console.log(file);
-    console.log(fileExtension);
-    console.log("Uploading file!");
+
+    const form = new FormData();
+    form.set("file", file);
+
+    const r = await fetch("/api/upload", {
+      method: "POST",
+      body: form,
+    });
+    const data = await r.json();
+    console.log(data);
   };
 
   const handleFileChange = (e) => {
